@@ -1,0 +1,1584 @@
+6.006 - Introduction to Algorithms
+https://ocw.mit.edu/courses/electrical-engineering-and-computer-science/6-006-introduction-to-algorithms-fall-2011/index.htm
+
+Requirements to Complete
+Do all readings and take notes
+Do all assignments and add code to GitHUb
+Skim Lecture Notes/Slides/Handouts and take notes
+Watch Lectures: 1, 2, 3, 8, 19, 23
+Pass 2 Quizzes and exam
+
+Pay particular attention to algorithms described in Cracking Coding interview pg 47, add this note to other algo classes
+
+Reading 1: Algorithmic Thinking and Peak Finding, Ch 1, Ch 3, Apx D.1
+	Intro
+		First unit of algo book
+			Has tutorial flavor
+			Introduces basic algorithms
+		The Appendices are a math reference
+			Help with notation
+			Help with remedial math
+	Chapter 1.1
+		Correct algorithms
+			Correct algorithms halt at the correct output for every given input
+			Incorrect algorithms may not halt at all or halt with the incorrect output
+			Incorrect algorithms can be useful in certain cases, like approximations
+		Characteristics of Algorithmic Problems
+			1. Having many candidate solutions, but...
+				a. Many candidates will not solve a practical version of the problem
+				b. Finding the best candidate for a specific problem can be challenging
+			2. Having practical applications
+				a. Finding the shortest route for a truck or train to save labor
+				b. Finding the shortest route on network for quick responses
+		NP-Completeness
+			An NP-Complete problem has no known efficient algorithm
+			Proving a problem is NP-Complete will spare an engineer the time looking for one
+			NP-Complete problems, like "The Traveling Salesman" are usually solved with approximation algorithms
+		Exercises
+			1. Real-world sorting: Putting your bookshelf in alphabetical order
+			2. Measures of efficiency besides speed: Space, readability and comprehension, time it takes to write
+			3. Strengths and limitations of a dictionary:
+				Strengths
+					Fast lookups
+					Keys can help with readability and comprehension
+					Keys are less abstract than list indices
+				Weaknesses
+					Can't be sorted
+					Iterating predictably
+					Use more space
+			4. ???
+			5. Real world problems
+				Where only the best solution will do: Treating cholera
+				Where an approximation is fine: grocery budget
+	Chapter 1.2
+		Efficiency
+			Implementing the wrong algorithm can be costly, e.g. sorting 10 million numbers
+				Amateur on Slow CPU vs Expert on Fast CPU
+					Expert
+						Implements insertion sort
+						Computer is 1000 times faster
+						Insertion sort implementation has efficiency constant of 2 (very efficient)
+					Amateur
+						Implements merge sort
+						Computer is 1000 times slower
+						Merge sort implementation has efficiency constant of 50 (very inefficient)
+				Expert's computer takes 5.5 hours to sort the numbers
+				Amateur's computer takes less than 20 minutes
+				Choose algorithms wisely, often more important than efficiency of implementation
+		Algorithms should be seen as technology
+			Picking one over another can make a big practical difference
+			Even when not used in the application layer, all the underlying tech relies on algorithms
+		Exercises
+			1. Example of algorithmic content at the application level
+				TODO List app sorts according to completed tasks
+				The app would need to...
+					Check each item
+					See if it's state has been set to completed
+					Order it in the list according to its state
+			2. If insertion sort is 8n^2 complex and merge sort is 64n*lg n, when is insertion sort faster?
+				N=2, 32 vs 256
+				N=10, 800 vs 2560
+				N=100, 80,000 vs 44,800
+				So the answer is definitely less than 100
+			3. Smallest N so algo 100n^2 is faster than 2^n?
+				N=2, 400 vs 4
+				N=10, 10,000 vs 1024
+				N=50, 250,000 vs BFN
+				N=20, 40,000 vs 1,048,576
+				N=15, 22,500 vs 32,768 <----ding ding ding
+				N=12, 14400 vs 4096
+				N=13, 16900	vs 8192
+				N=14, 19600 vs 16384
+	Chapter 3
+		Computing exact running times of algorithms is possible, but not usually worth the effort
+		Complexity descriptions should focus on the input
+		Asymptotic efficiency
+			How does the running time of an algo increase with the size of the input 'in the limit', as the size of the input increases without bound
+			That is, asymptotic efficient algos will grow slower as their inputs approach infinity, there will be some limit on their growth
+			Asymptotically efficient algorithms are the best choice for all but the smallest inputs
+			Pat's quote: "The limit on the running time of an algorithm is equal to the efficiency of the algorithm as the size of the input approaches infinity"
+		Asymptotic Notation
+			Abusing vs. Misusing
+				Notation is precise for describing efficiency, uses the set of natural numbers
+				Sometimes notation is altered, say for using real numbers or a subset of natural numbers
+				Important to understand precise notation so when altering it, you understand how it's being altered
+				Sort of like writing and grammar - if you're breaking grammar rules for effect, you better know which rules you're breaking
+			Capable of describing more than worst-case running time
+				Can describe memory usage
+				Can describe 'all inputs' running time
+				This notation is used to describe any function that describes an algorithm
+			Pgs 44-47 describes Θ-notation
+					Θ(g(n)) says there are a set of functions f(n) where there exists positive constants (c1, c2 and n0) where 0 <= c1*g(n) <= f(n) <= c2*g(n) for all n >= n0
+					Shorthand: f(n) = Θ(g(n))
+						says that f(n) is in the set of functions Θ(g(n))
+				Asymptotically Tight Bound
+					g(n) is an asymptotically tight bound for f(n) if f(n) = Θ(g(n))
+				Θ(g(n)) requries that all member f(n)'s be 'asymptotically nonnegative', or f(n) is nonnegative for sufficiently large n
+				asymptotically positive means f(n) is positive for sufficiently large n
+					f(n): if n == 10000: return -500 else: return n + n, f(n) would not be a member of Θ(g(n))
+				If g(n) is not asymptotically nonnegative, Θ(g(n)) is an empty set
+				All asymptotic notations used in the book assume the function it describes is asymptotically nonnegative
+				So saying that f(n) = 1/2n^2 - 3n = Θ(n^2) means that f(n) is in the set Θ(n^2)
+					This is how we can logically prove that multiplicative constants are unimportant for calculating efficiency
+					1/2n^2 - 3n; n^2 - 3n; and n^2 are all in Θ(n^2), so we can describe all of their efficiencies as Θ(n^2)
+				Smaller numbers can tend to break these sets, which is why we care about sufficiently large n
+				For sufficiently large n, the higher order terms (e.g. n^2 in 5n + 16n^2; n in 1/10n + 5000) will always overpower the constants
+					Thus, calculating c1n^2 and c2n^2 becomes trivial for n^2
+					So you can usually ignore the lower order terms when figuring if a f(n) is in Θ(g(n))
+				Constant functions are Θ(n^0) because they're a 0 degree polynomial, so Θ(1) is used as a shorthand
+			Pg 47 describes O-notation
+				O(g(n)) says there are a set of functions f(n) where there exists a positive consant c where 0 <= f(n) <= c*g(n)
+				Shorthand: f(n) = O(g(n))
+				Asymptotically upper bound
+				Θ(g(n)) implies O(g(n)) since Θ(g(n)) has an upper bound too
+					Put another way, and f(n) in Θ(g(n)) is also in O(g(n))
+				O(g(n)) is simply Θ(g(n)) w/o the lower bound
+				The upper bound makes it worse case
+				The problem with O is that it's not as accurate
+				O(g(n)) is the worst case scenario
+			Pg 48 describes Ω-notation
+				Describes best case scenario
+			If f(n) = Ω(g(n)) and f(n) = O(g(n)), then f(n) = Θ(g(n))
+			f(n) = Θ(g(n)) if and only if f(n) = Ω(g(n)) and f(n) = O(g(n))
+			In Equations and Inequalities
+				Notation used as a generic placeholder, an anonymous function
+				2n^2 + 3n + 1 = 2n^2 + Θ(n), means that Θ(n) is representing a single function in its set
+				If there are anonymous functions on boths sides, the right side is some satisfying function
+					e.g. 2n^2 + Θ(n) = Θ(n^2), 
+					there is some function in Θ(n^2) that will satisfy the equation for any member of Θ(n)
+					This holds true when chaining equations:
+						2n^2 + 3n + 1 = 2n^2 + Θ(n) = Θ(n^2)
+						There is some Θ(n) will work, and there is some Θ(n^2) that will work
+			pg 50 describes o-notation
+				o-notation is O-notation, but not asymptotically tight
+				2n = O(n^2), but it is not asymptotically tight
+				2n = o(n^2) but 2n^2 != o(n^2)
+			pg 51 describes w-notation
+				Analogous with Ω-notation between o-notation and O-notation
+			Asymptotic notation can be used with transitivity, reflexivity, symmetry and transpose symmetry (pg51,52)
+			Exercises
+				1. prove max(f(n), g(n)) = Θ(f(n) + g(n))
+					there exist positive constants c1, c2, and n0 such that 0<= c1*(f(n) + g(n)) <= max(f(n), g(n)) <= c2*(f(n) + g(n)) for all n >= n0
+					max(f(n), g(n)) < f(n) + g(n), so c2 can be any positive, whole number
+					there is some fraction for c1 that will overpower even very large values of (f(n) + g(n)) to make it smaller than max(f(n), g(n))
+					so c1 is some positive fraction
+		Chapter 3.2 goes over algebraic and arithmetic concepts used in the book
+	Appendix D: Matrices
+		Transpose: Swaps the rows and columns of a Matrix, A^T is the transpose of A
+			A = 1, 2, 3
+				4, 5, 6
+			A^2 = 1, 4
+				  2, 5
+				  3, 6
+		Vector: one-dimensional array
+			Vector of n elements is an n-vector
+			Standard vector is a 'column vector' or an n x 1 matrix
+			A 'row vector' is a transpose of a column vector, or a 1 x n matrix
+			Unit vector: ith element is 1, all other elements are 0
+		Zero matrix is a matrix whose elements are all zero
+			Denoted as 0, ambiguity resolved in context
+			Size of a zero matrix should also come from context
+		Square matrices are n x n, has special cases
+			Diagonal matrix: a[i][j] = 0 whenever i != j, so can be specified by listing diagonal elements, ignoring off-diagonal elemenets as 0
+			Identity matrix (I): Diagonal matrix with 1s along the diagonal
+				The ith column of an identity matrix is a unit vector for i
+				Said another way: an identity matrix is a collection of unit vectors
+			Tridiagonal matrix(T): t[i][j] = 0 whenever |i - j| > 1
+				Nonzero entries appear only
+					on the main diagonal |i - j| = 0
+					one unit from the diagonal in the upper left and lower right quadrants, |i - j| = 1
+			Upper triangular matrix(U): u[i][j] = 0 whenever i > j, All entries below diagonal are 0
+				unit upper triangular: The diagnonal is all 1s
+			Lower triangular matrix(L): l[i][j] = 0 whenever i < j, All entries above the diagonal are 0
+				unit lower triangular: The diagonal is all 1s
+			Permutation Matrix(P): Exactly one 1 in each row or column, 0s elsewhere.
+				When multiplied by a vector x, simply 'permutes' or rearranges x
+			Symmetric matrix(A): Matrix is equivalent to its transposed matrix
+		Basic matrix operations
+			Matrix addition: A + B = C is performed by a[i][j] + b[i][j] = c[i][j]
+				Said another way: adding the corresponding elements to create a new matrix of the same size
+				Adding a zero matrix: A + 0 = A = 0 + A
+			Scalar Multiple: zA = z * a[i][j], or multiply each element by z to get zA.
+				When z = -1, we get -A and all a[i][j] becomes -a[i][j]
+				A + -A = 0 = -A + A
+			Matrix subtraction: A - B = A + -B
+			Matrix Multiplication
+				Start with two 'compatible' matrices A and B
+				Compatible: number of A columns = number of B rows
+				A (a[i][k]; m x n) * B (b[k][j]; n x p) = C (c[i][j]; m x p)
+					a[i][k] * b[k][j] = c[i][j]
+				Complexity: n^3 multiplication and n^2 - 1 additions, or n^3 + n^2 - 1 = Θ(n^3)
+				By Identity Matrices: Im*A = A*In = A
+				By Zero Matricies: A0 = 0
+				Associative property: A(BC) = (AB)C (all matrices must be compatible!)
+				Distributive property: A(B+C) = AB + AC, (B+C)D = BD + CD
+				Not communative for n x n matrices when n > 1: 
+					A = 0, 1 and B = 0, 0
+						0, 0 and     1, 0
+					AB = 1, 0
+						 0, 0
+					BA = 0, 0
+						 0, 1
+
+Reading 2: Models of Computation, Python Cost Model, Document Distance
+	Most of this reading was covered in the previous reading
+	Python Cost Model
+		How to determine the cost of python primitive operations, like concatenating two lists with '+'
+		Provides tables of examples of python operations and the time they take to run
+			Examples:
+				converting a string to an int (int(string)): 84 * (n/1000)^2 microseconds for an n-length string
+				concatenating two lists (lstA + lstB): 22 * (n/1000) microseconds where lstA and lstB are length n
+				copying a dictionary (D.copy()): 57 * (n/1000) microseconds where D is length n
+
+Lecture 1: Algorithmic Thinking, Peak Finding
+	Summary: Designing efficient procedures for solving problems on large inputs
+	Scalability: How does efficiency change as inputs approach large sizes? 10^9? 10^15? 10^27?
+	Classic Data Structures: Helpful for designing algorithms
+	Classic Algorithms: Performing operations on classic data structures, like sorting a list
+	Problems sets have you build real implementations of classic algorithms
+	Peak Finder
+		Given an array, find a peak
+			Ex: [a, b, c, d, e, f, g, h, i]
+			b is a peak if b >= a and b >= c
+			Peaks are local
+			Start with a straightforward algorithm, then improve it
+				Look at each element, stop when you find a peak
+				Complexity: Θ(n) or linear, because peak may be at the end or the beginning
+				Faster method? Binary search (or Divide and Conquer)
+					Check the n/2 element and it's two neighbors
+					If no neighbor is bigger, you found a peak
+					For the first bigger neighbor found, divide the array again on that side and try again
+					Complexity
+						For each n: T(n) = T(n / 2) + Θ(1)
+						T(n) is the work that an algorithm does on input of size n
+						T(n / 2) is the work to divide n by 2 (used for indices)
+						Θ(1) is the work to compare array[n/2] with array[n/2 + 1] and array[n/2 - 1]
+						Base case: T(1) = Θ(1), because a 1 element array requires no comparisons
+						So add each of them up: Θ(1) + Θ(1) + Θ(1)... log n times
+						Complexity is Θ(log n)
+		2D Version
+			Ex: a, b, c, d
+				e, f, g, h
+				i, j, k, l
+				m, n, o, p
+			f is a peak if f >= b & f >= e & f >= g & f >= j
+			Straigtforward algo: Greedy Ascent
+				Starts in a spot (like k)
+					Goes to the left until it has to turn (at i) 
+					Goes down until it has to turn (at m)
+					Goes right until it has to turn (at p)
+				May end up looking at everything
+				Complexity: Θ(n*m) or (n^2) for a square matrix
+			Divide and Conquer
+				Pick middle column: j = m/2
+				Find 1D peak (i, j) in that column using Binary search described above
+				Use (i, j) to find a 1D peak (i, k) on row i
+				Much more efficient, Θ(log n)
+				Unfortunately, incorrect
+			2nd Try
+				Pick middle column: j = m/2
+				Find global maximum on column j, (i, j)
+				Compare (i, j-1), (i, j), (i, j+1)
+				Pick left column and redo search if (i, j-1) is greater, or right column if (i, j+1) is greater
+				If either two conditions don't work, then we're done
+				Solves problem checking half the columns
+				Complexity
+					T(n, m) = T(n, m/2)[for columns] + Θ(n)[for global max]
+					T(n, 1) = Θ(n)
+					T(n, m) = Θ(n) + Θ(n) + Θ(n) repeat log m times
+					Complexity is Θ(n log m)
+
+Lecture 2: Models of Computation, Document Distance
+	What's an algorithm?
+		A computational procedure for solving a problem
+		Takes input and generates output
+		Programs are algorithms implemented on a computer
+		Programs are written with programming languages
+		Algorithms are written with pseudocode or structured english
+		Computers run programs, models of computation run algorithms
+	Model of Computation
+		Specifies what operations you can do in an algorithm
+		Specifies how much they cost, what is time?
+		Model: Random Access Machine - like assembly programming
+			Has Random Access Memory, usually modeled as an array of words
+			Word = w bits
+			Array has constant number or registers
+			Runs an algorithm that
+				In Θ(1) time can load Θ(1) words, do Θ(1) computations and store Θ(1) words
+				In constant time can perform constant number of operations on constant number of words and provide constant output
+		Model: Pointer Machine - like OO programming
+			Dynamically allocated objects
+			Object has Θ(1) fields
+			Field is a word or a pointer
+			Pointer points to another object or has value null
+			Can be implemented with a Random Access Machine
+			Runs algorithms that can run computations like a RAM, or follows pointers in Θ(1) time
+		Model: Python
+			Can implement Random Access Machines using lists
+				l[i] = l[j] + 5
+				Accessing l[i] is Θ(1) time
+				Accessing l[j] is Θ(1) time
+				Adding l[j] to 5 is Θ(1) time
+			Can implement Pointer Machines using OOP
+				x = x.next
+				Accessing x.next is Θ(1) time
+				Storing x.next in x is Θ(1) time
+			When determining the cost of an operation in python, try to think in terms of RA machines and Pointer machines
+			L.append(x)
+				Obvious method is to create a new array and copy all the elements, which would be Θ(n) time
+				But is done in appx. Θ(1) by using table doubling (lecture 9)
+			L1 + L2
+				Obvious method is to create a new array and copy all elements from both, which would be Θ(1 + len(L1) + len(L2))
+				Python does the obvious, it's just syntactic sugar
+			x in L
+				Obvious method is to scan entire list, which would be Θ(len(L)), or worse if testing equality is complex
+				Python does the obvious, because lists aren't necessarily sorted
+			len(L)
+				Obvious method is to count all items in L, which would be Θ(n)
+				Python stores and updates the count, so it's Θ(1)
+	Document Distance Problem
+		Given two documents, D1 D2, calculate distance between them
+		Useful for comparing complex objects that may have similarities
+			Like web pages of code snippets
+			Identical objects would have 0 distance
+			Similar objects would have small distance
+			Disparate objects would have large distance
+		A document is a sequence of words, word is a string of characters
+		Look at shared words between D1 and D2 and use that to determine document distance
+		Algo:
+			Split document into words
+			Compute the frequencies that words appear
+			Find the dot product of those frequencies
+			Analysis
+				Frequencies should be thought of as vectors
+				Finding the dot product of vectors gives you the distance between them
+				arccos(D1 dot D2 / len(D1) + len(D2)), which is a formula for distance between vectors
+		Lecture code samples has detailed examples
+		Count dictionaries in python can be useful for finding frequencies
+
+Reading 3: Insertion Sort, Merge Sort
+	Chapter 1.2
+		Insertion sort
+			Takes c1n^2 to sort
+			c1 is a constant
+			So Insertion sort's time is proportional to n^2
+		Merge sort takes c2n log n
+		c1 is generally smaller than c2
+		So for large n, merge sort will always be faster
+		The 'higher order' factor is n^2 vs. log n, so for big n, c1 and c2 don't matter
+		Efficiency - See 'Efficiency' in chapter 1.2 from Reading 1, above
+	Chapter 2.1 Insertion Sort
+		Input: A sequence of numbers
+		Output: The same sequence in ascending order
+		Insertion sort works like sorting playing cards
+			Take one off the top of the deck w/ right hand
+			Compare, left to right, with cards in left hand
+			Place the card between the cards where it belongs
+		Pseudocode sorts collection in place, not creating new array
+		Loop Invariant
+			For Insertion-Sort (pg 18):
+				At the start of each iteration of the for loop of lines 1-8,
+				the subarray A[1..j-1] consists of elements originally in A[1..j-1],
+				but in sorted order.
+			Requirements for loop invariant
+				Initialization:
+					It is true prior to the first iteration of the loop
+				Maintenance:
+					If it is true before an iteration of the loop,
+					it remains true before the next iteration
+				Termination:
+					When the loop terminates, the invariant gives us
+					a useful property that helps show the algorithm is correct
+				If the first two properties hold, the invariant is true prior to every iteration of the loop
+				Initialization is the start and Maintenance covers each iterative step
+				Maintenance stops when the loop terminates
+				The condition that stops the loop is combined with the loop invariant, and specifically its Termination property, to show correctness
+			Insertion-Sort Loop Invariant
+				Initialization:
+					Start by showing that the loop invariant holds before the first looper iteration when j = 2.
+					The subarray A[1..j-1], therefore, consists of just the single element A[1], which is
+					in fact the original element in A[1] (because we haven't moved anything yet). Moreover,
+					this subarray is sorted (because there's only one element in it) which shows that the 
+					loop invariant holds prior to the first iteration of the loop
+				Maintenance:
+					Next, show that each iteration maintains the loop invariant. Informally, the body of the
+					for loop works by moving A[j-1], A[j-2], A[j-3] and so on by one position to the right until
+					it finds the proper position for A[j] (lines 4-7), at which point it inserts the value of A[j] (line 8).
+					The subarray A[1..j] then consists of the elements originally in A[1..j], but in sorted order.
+					Incrementing j for the next iteration of the for loop then preserves the loop invariant. A more
+					formal treatment would require and invariant for the while loop for lines 5-7.
+				Termination:
+					Finally, we examine what happens when the loop terminates. The condition that causes the for loop
+					to terminate is j > A.length = n. Because each loop iteration increases j by 1, we must have j = n + 1
+					to terminate. Substituting n + 1 for j in the wording of the loop invariant, we have that the subarray
+					A[1..n] consists of the elements originally in A[1..n] but in sorted order. Observing that the
+					subarray A[1..n] is the entire array, we conclude that the entire array is sorted and the algo is correct.
+		Pseudocode conventions
+			Blocks are shown by indents
+			for loop counters hold their value after they pass their termination condition
+				Ex. for i to length, i = length + 1 after termination
+			// are comments
+			i = j = e assigns the value of 'e' to 'i' and 'j'
+			Global variables are explicitly indicated
+			A[n] means the nth value of the array, A[1..n] is a subarray from 1 to n
+			Object attributes using dot notation e.g. A.length for array length
+			Object variables are pointers or references
+				x = y //x.f and y.f have same value
+				x.f = 3 //x.f and y.f are now both 3
+			NIL for null pointers or references
+			Parameters are passed to procedure by value, not reference
+				procedure(a, b)
+					a = 1
+					b = 2
+				x.f = 3
+				y.g = 4
+				procedure(x.f, y.g) //x.f and y.g will remain 3 and 4, respectively
+			Objects and arrays will pass their pointers to procedures
+				procedure(x, y)
+					x.f = 4
+					y = x
+				procedure(a, b) //a.f will  become 4 in parent procedure, but b will not become a in parent
+			Return statements are standards, except multiple values can be passed
+			"and" and "or" operators are short circuiting
+				x and y // y is not evaluated if x is false
+				helpful for situations like "x != nil and x.f = y"
+			Error keyword indicates some bad condition was met, should be handled out of scope
+	Chapter 2.2: Analyzing Algorithms
+		Algorithms in this book are written to run on a Random Access Machine (RAM)
+			No concurrency
+			The RAM tries to represent a real computer without strictly defining specs and instructions
+			Included instructions like arithmetic operations and and data movement are constant time
+			'Words' of data have limited size, so our RAM can't do operations on giant data sets in constant time
+			2^k is constant time for small positive integers, as most computers would do bit shifting, so long as k doesn't exceed the bits in a word of data
+			No memory hierarchy like caches or virtual memory
+		Insertion Sort Analysis
+			Input Size
+				Often the number of items of input, like in a sort
+				A multiply algorithm would determine size by total number of bits to represent input
+				May need two numbers, like nodes and edges in a graph or rows and columns in a matrix
+			Running time
+				Number of primitive operations or "steps" executed - the constant time operations provided by the computational model
+				In the book's RAM model, line i runs in ci time, meaning each time is a consant, even when different lines may take different times
+			Insertion Sort running time (pg 26)
+				for loop test in line 1 runs n times, c1 cost each time
+				key assignment in line 2 runs n - 1 times, c2 cost each time
+				commented line has no cost
+				i assignment in line 4 runs n - 1 times, c4 cost each time
+				while loop test in line 5
+					tj is the time run for a given value of j
+					so for j from 2 to n, sum all values of tj (sum(tj) to get times
+					c5 cost each time
+				A[i + 1] assignment in line 6 runs sum(tj - 1) times, c6 cost each time
+				i assignment in line 7 runs sum(tj - 1) times, c7 cost each time
+				A[i + 1] assignment in line 8 runs n - 1 times, c8 cost each time
+				So the time to run Insertion-Sort is defined by T(n)
+					T(n) = c1*n + c2*(n-1)+c4*(n-1)+c5*sum(tj)+c6*sum(tj-1)+c7*sum(tj-1)+c8*(n-1)
+				When an array is already sorted, the while loop finishes in c5, because A[i] <= key
+				This is the best case scenario, and it's time is
+					T(n) = c1*n + c2*(n-1)+c4*(n-1)+c5*(n-1)+c8*(n-1)
+						 = (c1 + c2 + c3 + c4 + c5 + c8) * n - (c2 + c4 + c5 + c8)
+						 = an - b, which is a linear function of n
+				When an array is in descending order, the while loop finishes in...
+					sum(tj) = ((n(n+1)/2) - 1)
+					c5*sum(tj) + c6*sum(tj) + c7*sum(tj)
+				This is the worst case scenario, it's time is
+					T(n) = an^2 + bn + c, which is a quadratic function of n
+			Worst-case and average case analysis
+				Book mostly focuses on worst-case
+					To get an upper bound on any input
+					Algo is guaranteed to not take longer
+					No need for educated guessing of time
+				Worst case can be common for some algos, like searches for something that's not there
+				Average case and worse case are often close. Average case for insertion sort is also quadratic
+		Ultimately, the rate of growth or order of growth is most important
+		So leading term of a formula is most important (n^2 in a quadratic, n in a linear)
+		Lower order terms become insignificant for large inputs
+		So the worst case of insertion sort is Θ(n^2)
+		An algorithm is more efficient if its worst-case scenario has a lower order of growth
+		Constant factors and lower-order terms may make an algo less efficient for small numbers, but for large numbers, Θ(n^2) is always more efficient than Θ(n^3)
+	Chapter 2.3 Designing Algorithms
+		Insertion sort was an incremental approach to algo design
+		Divide-and-conquer
+			Another algo design approach
+			Recursive - problem is broken into similar sub problems that allow operation to call itself
+			Performs three steps at each level of recursion
+				Divide problem into a number of sub problems that are smaller instances
+				Conquer the subproblems by solving them recursively, or solve the subproblems
+					directly when they are small enough
+				Combine the solutions to the sub problems into the solution for the original problem
+			Merge sort
+				Divide: Divide the n element sequence to be sorted into two subsequences of n/2 elements each
+				Conquer: Sort the two subsequences recursively using merge sort
+				Combine: Merge the two sorted sequences to produce the sorted answer
+				Merge is the key operation
+					As a playing card analogy:
+						Two piles of face-up cards
+						Piles are sorted, smallest card on top
+						Pick the smaller of the two, place it face down on the table
+						Continue until one pile is empty, then dump the second pile on top
+					Merging takes Θ(n) time, because the worst case scenario requires one comparison for every card
+				Add sentinels to the ends of divided collections that produce specific output for comparison, e.g. infinity will always be bigger
+				Loop over the size of the original list, doing comparisons on the separate stack. Once you get to the sentinel for one stack, all remainder items will come from the other stack, and both sentinels will be left once finished iterating over the original list
+				Merge sort loop invariant on pg 32, 33
+		Analyzing Divide and Conquer
+			Running time of recursive algos is described by a recurrence equation or recurrence
+			Reccurence describes the overall running time on a problem with input size n in terms of the running time on smaller inputs
+			A recurrence for a divide and conquer will take a problem that yields a subproblems, with each subproblem being 1/b size of the original
+			It takes T(b/n) to solve one sub problem of size b/n, so it takes aT(n/b) to solve a subproblems
+			If it takes D(n) to divide the problem into subproblems and C(n) to combine the solutions into the original problem's solution, we get this recurrence:
+					   Θ(1) if n <= c
+				T(n)=  aT(n/b) + D(n) + C(n)
+			Analysis of Merge Sort
+				Building a recurrence for merge sort
+					Divide: The divide step just computes the middle of the subarray, which is constant, so D(n) = Θ(1)
+					Conquer: We recursively solve 2 subproblems, each of size n/2 which contributes 2T(n/2) to running time
+					Combine: We have already noted that the Merge procedure on n-element subarrays takes Θ(n) time, so C(n) =  Θ(n)
+				Pg 36, 37, and 38 describes how a recurrence is described by lg n
+					A problem of size one can be solved in constant time, c or Θ(1)
+					Each individual divide step is also constant time, c or Θ(1)
+					Each individual combine step is also constant time, c or Θ(1)
+					There will be n divide steps and n combine steps, so divide is cn or Θ(n) and combine is cn or Θ(n)
+					When n is a perfect square, it can be divided in half log n times
+					Eventually, n will equal 1, and a problem of size one can be solved in constant time
+					So the divide is Θ(n), the combine is Θ(n), the conquer is Θ(log n), so the running time is Θ(n log n)
+					Note that when T is used recursively in a recurrence, like = aT(n/b) + D(n) + C(n), its time will be bound by log n
+	Chapter 4.3: The substitution method for solving recurrences
+		tl;dr T(n) = O(n) can be proved with substitution by proving T(n) <= cn, and then substituting cn for T(n) in the recurrence and proving T(n) is less
+		Somewhere previous in this chapter they must have proven that n/2 = floor(n/2) for calculating complexity
+		Two stebs for the substitution method:
+			1. Guess the form of the solution
+			2. Use mathematical induction to find the constants and show that the solution works
+		Example: Find an upper bound for T(n) = 2T(floor(n/2)) + n
+			Guess - O(n lg n) (Big oh, or upper bound)
+			Prove that T(n) <= cn lg n for an appropriate choice of constant c > 0
+			Do so by assuming that O(n lg n) holds for all positive m < n, in particular for m = floor(n/2)
+				Assumption yields equation: T(floor(n/2)) <= c floor(n/2) lg floor(n/2)
+				By substituting into the original recurrence [ T(n) = 2T(floor(n/2)) + n ], we start with
+					T(n) <= 2(c*floor(n/2) lg floor(n/2)) + n
+						and use algebra (pg83) to get to our guess:
+					T(n) <= cn lg n
+				For the inductive proof, we need to show that there is some c where T(n) <= cn lg n, which would prove T(n) = O(n lg n)
+				If we assume that T(1) = 1, our proof would fail because 1 lg 1 = 0, and no value of c would make T(n) <= cn lg n when n = 1
+				This is the main reason why big O is defined as 'there exists'(pg47), and allows us to choose n0
+				If we assume that T(2) = 4 and T(3) = 5, then it's trivial to find a c to make T(n) <= cn lg n work
+				So we can prove that T(n) = O(n lg n) by setting n0 = 2, because T(n) = O(n lg n) for any n >= 2
+		Making Good Guesses
+			Use prior experience
+			Recursion trees can be helpful
+			Find upper bounds and lower bounds and converge on a tight solution
+				T(n) = Ω(n)
+				T(n) = O(n^2)
+				converge on Θ(n lg n) and prove with substitution, as in the above example
+		Adjusting guesses for subtleties
+			Sometimes a lower order term will ruin a guess
+				Example: T(n) = T(floor(n/2)) + T(floor(n/2)) + 1
+				Guess: T(n) = O(n) or T(n) <= cn
+				It seems highly likely that T(n) = O(n), so T(n) <= cn for appropriate c
+				But the math doesn't work when trying to prove with substitution:
+					T(n) <= c*floor(n/2) + c*floor(n/2) + 1
+						  = cn + 1
+				T(n) <= cn + 1 does NOT imply T(n) <= cn for any choice of c, there's no algebraic way to get there
+				But it's so damn close! How to make the math work? Alter the guess.
+				New Guess: T(n) = O(n) or T(n) <= cn - d, where d is a positive constant
+				T(n) <= (c*floor(n/2) - d) + (c*floor(n/2) - d) + 1
+					  = cn - 2d + 1
+					 <= cn - d
+			In cases like this, there is a temptation to pick a higher bound, like O(n^2), which would be a weaker upper bound
+			Weaker upper bounds may be harder to prove, simply because the algerbra is trickier for the n^2 substitution than the cn - d substitution
+		Avoiding pitfalls
+			Recurrence: T(n) = 2T(floor(n/2)) + n
+			Guess: O(n) or cn
+			Proof:
+				T(n) <= 2(c*floor(n/2)) + n
+					 <= cn + n
+					  = O(n)
+			This is a bad proof, because though cn + n = O(n), it does NOT imply T(n) <= cn, which it MUST to prove T(n)=O(n) by substitution
+			Question: Would this work?
+				T(n) <= 2(c*floor(n/2)) + n
+					 <= cn + n
+					 <= cn
+					  = O(n)
+		Make proofs easier by changing variables, see pg86 for example
+		Exercises
+			1. Prove T(n) = T(n-1) + n is O(n^2)
+				Substitute cn^2, assume n >= 3
+				T(n) <= c(n - 1)^2 + n
+					  = c((n - 1) * (n - 1)) + n
+					  = c(n^2 - 2n + 1) + n
+                      = cn^2 - 2cn + c + n
+					 <= cn^2 - 2cn
+					  = cn(n - 2)
+					 <= cn
+					  = O(n^2)
+	Chapter 4.4: The recursion-tree method for solving recurrences
+		Recursion trees help provide good guesses for substitution method
+		Recursion Tree
+			each nodes represents cost of single subproblem
+			we sum the costs WITHIN each level of the tree to obtain the per-level cost
+			finally, we sum costs OF each level to determine the total cost of the recursive algorithm
+		Recursion Trees can be used sloppily to form a guess, or precisely to get the correct answer w/o substitution
+		Example: T(n) = 3T(floor(n/4)) + Θ(n^2)
+			Substitute Θ(n^2) for cn^2, sloppy, but helps us guess for the upper bound
+			Then branch out:
+			T(n)   ->   cn^2                     ->  cn^2
+					   /  |   \					   /  |   \
+			     T(n/4) T(n/4) T(n/4)        c(n/4)^2 c(n/4)^2 c(n/4)^2
+											/  |    \    
+									 T(n/16) T(n/16) T(n/16)
+		Recursion branches continue to split out until we have a row of T(1), we know this happens when n/4 = 1 or after log n (i.e. log four of n) levels
+Lecture 3: Insertion Sort, Merge Sort
+		Applicatins for sorting
+			Phone book
+			Getting a Median
+			Computer Graphics Processing - render from front to back
+		Insertion Sort
+			for i, 1...n
+			insert A[i] into sorted array A[0..i-1]
+			pairwise swaps down to the correct position
+			Example: [5, 2, 4, 6, 1, 3]
+			i = 1: key at 2, swap 2 with 5 because 2 < 5 - [2, 5, 4, 6, 1, 3]
+			i = 2: key at 4, swap 4 with 5 because 4 < 5 - [2, 4, 5, 6, 1, 3]
+			i = 3: key at 6, no swap because 6 > 5 - [2, 4, 5, 6, 1, 3]
+			i = 4: key at 1, swap 1 with 6, then with 5, then with 4, then with 2 - [1, 2, 4, 5, 6, 3]
+			i = 5: key at 3, swap 3 with 6, then with 5, then with 4 - [1, 2, 3, 4, 5, 6]
+			Analysis: load the key Θ(n) times, each step is Θ(n) compares and swaps
+			Could do a binary search on already sorted portion of the aray and fewer compares and swaps
+		Merge Sort
+			Divide and Conquer
+			Divide the array in half until you have n arrays and log n tree levels
+			The arrays are sorted because they only have one item each
+			Merge the arrays
+				Compare the first element of each
+				Take the smaller and put it first in the new array
+				Compare the first element of each again
+			Example Merge:
+				Takes two sorted arrays as input
+				L' = 2, 7, 13, 20
+				R' = 1, 9, 11, 12
+				Two finger algo
+				Step 1:
+					Right Finger on 1
+					Left Finger on 2
+					1 < 2, 1 goes into the new array
+				Step 2:
+					Right finger on 9
+					Left Finger on 2
+					2 < 9, 2 goes into the new array
+				Step 3:
+					Right finger on 9
+					Left finger on 7
+					7 < 9, 7 goes into the new array
+				Step 4:
+					Right finger on 9
+					Left finger on 13
+					9 < 13, 9 goes into the new array
+			Analysis: Recurrence: T(n) = C1 + 2T(n/2) + C2 * n
+				C1 - time to divide the array
+				C2 - time to merge two arrays
+				Proof by picture:
+							C2 * n        (C1 ignored because of cn dominance)
+						   /	   \      2 branches because recursive variable in recurrence is 2T
+					C2 * n/2       C2 * n/2
+				   /     \          /      \
+			C2 * n/4  C2 * n/4  C2 * n/4    C2 * n/4
+			----------------------------------------
+			C  C  C  C  C  C  C  C  C  C  C  C  C  C   (eventually n/i will be 1, so it's all constants)
+				Tree has 1 + log n levels and n leaves
+				How much work is in each level?
+					Top level is C2 * n
+					Second level is C2 * n/2 + C2 * n/2 = C2 * n
+					Third level is C2 * n/4 + C2 * n/4 + C2 * n/4 + C2 * n/4 = C2 * n
+					Every level is C2 * n
+				T(n) = number of levels times amount of work per level
+				T(n) = 1 + log n * C2 * n
+					 = Θ(n log n)
+		Insertion Sort advantages over Merge Sort
+			Merge Sort requires Θ(n) auxilary space, or extra space
+				Could optimize this by only copying one array and using multiple indices for the initial array
+			Insertion Sort uses in-place sorting, which requires Θ(1) or constant auxilary space
+			An in-place merge sort exists, but it almost always performs near the upper bound
+				Slower than merge sort
+				Harder to implement
+		Recurrences
+			6.002 may offer some help on recurrences
+			T(n) = 2T(n/2) + Θ(n^2), Θ(n^2) dominates, so tree doesn't matter, Θ(n^2)
+			T(n) = 2T(n/2) + Θ(1), leaves dominate, we know every tree has n leaves, so n*Θ(1) or Θ(n)
+
+Reading 4:
+	Chapter 6: Heapsort
+		Heaps in this book refer the data structure, not garbage collection
+		6.1 Heaps
+			A heap is an array with additional operations that allow it to function like a tree
+			Each item in the array can compute the index of its parent, left child, and right child in Θ(1)
+				This is done by bitshifting
+			These are known as binary heaps, and there are two kinds
+				The values in a binary heap satisfy a property
+				max-heap, the value of a node is at most the value of its parent
+					A[Parent(i)] >= A[i]
+					The root value is the largest value in the array
+				min-heap, the value of a node is at leas
+					A[Parent(i)] <= A[i]
+					The root value is the smallest value in the array
+			Max-heaps are used for heapsort
+			Node 'Height': number of edges on the longest, simple downward path to a leaf
+			Heap 'Height': height of the root node
+			Height is always Θ(lg n), because it's a binary tree
+			Basic heap operations are, at most, proportional to height, so O(lg n) time for basic operations
+		6.2 Maintaining the heap propety
+			Max-Heapify maintains the max-heap property
+				Takes an Array and an index, assumes the children of the index are max heaps
+				Compares the index's value with its children's value
+				If one of the children are larger, swaps index w/ largest child, recurses, using the larger child's index
+			Max-Heapify running time recurrence: T(n) <= T(2n/3) + Θ(1), solution is O(lg n)
+				Checking size between index and its children and swapping the index with the largest is constant time Θ(1)
+				Children's subtrees have 2n/3, at most, size, and so the operation must be recursed that many times in worst case
+		6.3 Building a Heap
+			Build-Max-Heap
+				Takes an array
+				Starts with the last element of the array and loops backwards, calling Max-Heapify on each
+				The leaves don't have any children, so the first few loops of the array are trivial
+				The nodes with children will swap with their children if their children are larger
+					If grandchildren end up being larger, the recursive Max-Heapify will move the current node value all the way down
+				By the time you get to i = 0, all the node values are where they should be, and root element will swap recursively as necessary
+			Loop Invariant: At the start of each iteration, each node i + 1, i + 2,... i + n si the root of a max heap
+				Initialization: The first iteration of the loop is on a leaf, thus a max heap
+				Maintenance: 
+					Max-Heapify guarantees that a node and its three children will be organized as a max-heap, so 
+					as i decrements backwards through the array, the i position will always be organized as a max heap
+				Termination: The loop terminates when i = 0, so 1 will be the last node that Max-Heapify runs on, meaning
+					i = 1 is the root of a Max-Heap, which is now the entire array
+			The upper bound of Max-Heapify is O(lg n), and Build-Max-Heap runs Max-Heapify n times, so Build-Max-Heap is O(n lg n)
+			However, we also know that the comparison piece of Build-Max-Heap is Θ(1)
+			So, when Build-Max-Heap is run on the leaves in Max-Heapify, it is not O(lg n)
+			Furthermore, because Build-Max-Heap iteratively builds max heaps going backwards, Max-Heapify never sees the worst case
+			So the running time on Build-Max-Heap is not asymptotically tight at O(n lg n), but rather at O(n)
+				Still slower than O(lg n), but faster than O(n lg n)
+				See pgs 157, 159 for the inductive proof
+		6.4 The heapsort algorithm
+			Heapsort
+				Heapsort takes an array and runs Build-Max-Heap on it
+				Then, it iterates over the new max heap, and at each step, it
+					Puts root element on the end of the array
+					Reduces the size of the array by one, ignoring the largest element that was just put on the end
+					Calls Max-Heapify on the smaller array and the new root element, ensuring the first element and its children make a max heap
+				T(n) = O(n) + n * O(lg n) = O(n) + O(n lg n) = O(n lg n)
+					O(n) for the Build-Max-Heap
+					O(lg n) for Max-Heapify
+
+1 - 4 - 2017
+	Reading 5 - 12.1, 12.3
+	Reading 6
+	Reading 7
+			
+			
+Reading 5: Binary Search Trees, BST Sort
+	Chapter 10.4: Representing rooted trees
+		Binary Trees			
+			The tree itself has a pointer to its root. If T.root is empty, tree is empty
+			Each node has two children, left and right
+			If left or right is empty, it has no left or right child, respectively
+		Unbounded branching
+			If a tree's nodes have more than one child, a node should track only its left child
+			Nodes also track their right sibling, allowing a node to track its children by asking its left child about its sibling
+			If a node has no children, x.left-child = nil. When x.right-sibling = nil, the node has no siblings and we've found all of the parent's children
+	Chapter 12.1: What is a binary search tree?
+		Basic operations have complexity proportional to the height
+			Basic operations: search, min, max, predecessor, successor, insert, delete
+			Height h means Θ(h)
+			Randomly built BST have expected complexity Θ(lg n)
+			BST constructed as a linear chain, worst case complexity is Θ(n), because h = n
+		Binary search trees can be represented as a linked data structure of objects
+		Binary search tree property: 
+			all nodes in the left subtree of a node x are less than or equal to x
+			all nodes in the right subtree are greater or equal to x
+		Inorder Tree Walk
+			Enables printing all values in sorted order
+			Prints the root after printing all values in root's left subtree
+			Prints the right subtree after the root
+			Pre-order walk prints root first
+			Post-order walk prings root last
+			Procedure
+				Take a node x
+				Check if x exists
+				If it does
+					recurse on its left child (Inorder-Tree-Walk(x.left))
+					print its key (print x.key)
+					recurse on its eright child (Inorder-Tree-Walk(x.right))
+			Complexity is O(n), proof on pg288
+				I'm still having a little trouble following these proofs
+	Chapter 12.2: Querying a binary search tree
+		Searching
+			Given the root and a key k, returns a node with key k, or nil if none exists
+			first checks if x is nil or if x's key is k (if x == nil or k == x.key)
+				returns x if either is true
+			then checks if k is less than x's key (if k < x.key) and recurses on x's left child (return Tree-Search(x.left, k)
+			otherwise, recurses on x's right child (return Tree-Search(x.right, k))
+			Doing the search iteratively tends to be more efficient (pg291 has iterative example)
+		Minimum and Maximum
+			Get the minimum by following the left child until you hit nil
+				while x.left != nil
+					x = x.left
+				return x
+			maximum
+				while x.right != nil
+					x = x.right
+				return x
+		Successor and predecessor
+			Successor
+				Given x, find the smallest key greater than x.key
+				if x's right child is not nil(if x.right != nil), find the smallest node of the right subtree (return Tree-Minimum(x.right))
+				otherwise, set y to x's parent (y = x.p)
+				as long as x is not the tree root (y != nil) and x is not a left child (x == y.right)
+					set x to its parent (x = y)
+					set y to its parent (y = y.p)
+				return y
+			Predecessor is symmetric to successor
+		Comparing heaps and bst: 
+			minimum is attained from bst in O(h), and from a min-heap in O(1)
+			building a min heap from an unsorted array is O(n lg n)
+			inserting into a bst is O(h)
+			heap seems better in most cases (??)
+			BSTs seem most useful when
+				building them is low complexity
+				you only need to run a few O(n) operations on them that are faster than sorting
+	Chapter 12.3: Insertion and Deletion
+		Insertion
+			This insertion method will construct a tree so that a parent's left child is always smaller than the parent, and the right is always larger
+			To insert a value v into binary search tree T, create a node z, such that z.key = v, z.left = nil, z.right = nil
+			Use an empty pointer node y and a pointer for T's root node x
+			Do the following until x is represents a node beneath a leaf (while x != nil)
+				set y to x (y = x)
+				compare z.key and x.key
+					if x.key is bigger, set x to its left child (x = x.left)
+					if z.key is bigger or equal, set x to its right child (x = x.right)
+				eventually, x will represent a spot below a leaf, and y will represent that leaf
+			After the loop terminates, set z's parent to y (z.p = y)
+			If y==nil, the loop terminated immediately, and the tree was empty, so z should be the root (T.root = z)
+			if the tree wasn't empty, compare z's key to y's key
+				if y's key is bigger, set z to y's left child (y.left = z)
+				if z's key is bigger, set z to y's right child (y.right = z)
+			Insertion runs in O(h), like other primitive binary search tree operations
+		Deletion
+			To delete a node z from binary search tree T, employ a strategy with three basic cases:
+				Case 1: If z has no children, remove it by replacing it's parent's reference to z with nil
+				Case 2: If z has one child, elevate that child to take z's position in the tree by
+					setting z's parent's reference to z to z's child e.g. z.p.left = z.left
+				Case 3: (the tricky one) If z has two children, find z's successor y - which must be in z's right subtree - 
+					and have y take z's position in the tree. The rest of z's original right subtree becomes y's
+					right subtree and z's left subtree becomes y's new left subtree.
+			The procedure to do this alters the cases slightly:
+				Case 1: z has no left child, so replace z by its right child. If z's right
+					child is nil, then z is deleted when set to its right child. When z's
+					right child is not nil, z is replaced by it's only child, the right one.
+				Case 2: z has only a left child, so replace z by its left child
+				Case 3: z has two children, so we need to find y, which is in z's subtree and
+					has no left child. y needs to replace z, to do that...
+						y is z's right child: replace z with y, leaving y's right child alone
+						y is not z's right child: y is somewhere else in z's subtree, so replace
+							y with its own right child and then replace z with y
+				You go to the right subtree when searching for a y because you need a replacement for z that
+					will definitely be larger than z's left child, and all the values in the right subtree
+					of a BST are larger than z, which itself is larger than all the values in its left subtree.
+					We a y w/o a left child because it's trivial to set z's old left child
+					to y's new left child, and because it means that y is the smallest element in z's right subtree,
+					which makes it the best replacement for z. Thus, when y replaces z, all the remaining nodes in the
+					right subtree will be greater than y. The root of a right subtree is the smallest node in the tree
+				Transplant
+					Replaces a subtree of T rooted at node u with the subtree rooted at node v
+					if u is the root (u.p == nil), set v to the new root (T.root = v)
+					otherwise, check if u is the left child of its parent
+						if it is, replace the parent's left child with v (u.p.left = v)
+						if it isn't, replace the parent's right with v (u.p.right = v
+					check if v is nil (meaning u'z subtree is being deleted
+						if it's not, set v's parent to u's parent (v.p = u.p)
+					v.left and v.right are un-update because this is a subtree transplant
+			Tree-Delete
+				Delete an element z from binary search tree T
+				if z has no left child, transplant subtree root z with subtree root z.right (if z.left == nil: Transplant(T, z, z.right))
+					By replacing z with its right child, you handle the single child case
+					and the no child case, replacing z with nil when it has no children
+				otherwise if z has no right child, replace z with its left child
+					In this case, we know that z only has one child, the left child
+				but if z has two children, find the smallest node on the right side (y = Tree-Minimum(z.right))
+					So now that we have y, check if y is z's child
+						if it's not, replace y with it's right child (Transplant(T, y, y.right))
+						then set y's right child to z's right child (y.right = z.right)
+						and also set y's right child's parent to y (y.right.p = y)
+					And whether y is z's child or not,
+						replace z's subtree with y's subtree (Transplant(T, z, y))
+						set y's left child to z's left child (y.left = z.left)
+						and set y's left child's parent to y (y.left.p = y)
+				Tree-Delete runs in O(h) time, like other primitive bst operations
+	Reading 5 also contains python implementations of both bst operations and avl operations
+				
+
+Reading 6:
+	Chapter 13.2: Rotations
+		Rotations preserve the binary-search-tree property.
+		Left-Rotate
+			Can be performed on any node with a right child
+			Swaps the node with its right child
+				The node becomes the left child of its right child
+				The node keeps its left child
+				The node's right child becomes its right child's left child
+			Procedure
+				set y to x's right child (y = x.right)
+				set x's right child to y's left child (x.right = y.left)
+				if y has a left child (y.left != nil), set it's parent to x (y.left.p = x)
+				set y's parent to x's parent (y.p = x.p)
+				if x doesn't have a parent (x.p == nil), set y as the new table root (T.root = y)
+				otherwise, if x is it's parent's left child (x == x.p.left), set x's parent's left child to y (x.p.left = y)
+				otherwise, set x's parent's right child to y (x.p.right = y)
+				set y's left child to x (y.left = x)
+				set x's parent to y (x.p = y)
+		Right-Rotate is symmetric
+		Both run in O(1) time
+		Pat: Seems useful for balancing trees
+			which would reduce height, 
+			which reduces O(h) complexity
+				O(n) for a linear chain
+				O(lg n) for a balanced tree
+	The table sentinel is T.nil, which may be nil for some tables or some other value for others
+	Chapter 14.1: Dynamic order statistics
+		Sometimes its necessary to use data structures beyond textbook ones to solve a problem
+		Inventing a brand new data structure is usually impractical
+		So modify a textbook data structure
+		Like adding a size element to a red-black tree to get an order-statistic tree
+		Order-statistic tree
+			Node attributes: key, color, p (parent), left, right, size (size of node's subtree, including node at the subtree's root)
+			If T.nil.size is 0, x.size = x.left.size + x.right.size + 1
+			Keys need not be distinct, that is, the keys of the tree are not a set, but the makeup of the nodes may be
+			Rank is determined by position when printed with an inorder walk of the tree
+			Retrieving element of given rank, that is, finding the ith smallest element of the given element's subtree
+				OS-Select(x, i)
+					returns a node containing the ith smallest key in the subtree rooted at x
+					All of the element in x's left subtree are smaller, so we can determine x's rank by x.left.size + 1
+						Because x comes after all the elements in its left subtree, and before all the elements in its right
+					So you find the the rank of x by x.left.size + 1 (r = x.left.size + 1)
+					If an element's rank is i (if i == r), then we found the ith node, return it (return x)
+					If not, check if the r is a lesser rank (elseif i < r)
+					If it is, recurse on the left child and keep looking for the ith element (OS-Select(x.left, i))
+					Otherwise, recurse on the right child, subtracting the current node's rank from i (OS-Select(x.right, i - r))
+						Since the ith element is not in x's left subtree, we know the ith element is the (i-r)th smallest element in x's right subtree				
+					Complexity: O(lg n), worst case is proportional to height of tree
+			Given a whole tree, determine the rank of a given node
+				OS-Rank(T, x)
+					returns the position of x in linear order determined by an inorder walk of tree T
+					First, get the rank of x in its subtree (r = x.left.size + 1)
+						Again, this ensures x's rank relative to all the elements in its left subtree
+					Then, set y to x so r is the rank of x.key in the subtree rooted at y (y = x)
+					Then loop upwards through the tree until y == T.root
+						During the loop, if y is the right child of its parent
+							increase x's rank by adding y's parent's rank to it (r = r + y.p.left.size + 1)
+							this is the only time x's rank increases
+							if y is the left child all the way up, then there are no elements outside of x's left subtree with a rank smaller than x
+						Set y to its parent (y = y.p) and loop again
+						In this loop, y is searching for nodes with keys that are smaller than x.key
+						We ignore left subtrees because we know that a subtree root is bigger than everything in its left subtree
+						So any subtree root that has x in its left subtree will be bigger than x, and so not increase x's rank
+						But when we find that x was part of some element's right subtree, when y == y.p.right
+						So when y finds that its in the right subtree of its parent, it knows that its parent and all the nodes of its parent's
+							left subtree have a smaller rank than x, so it totals those nodes up and adds their rank to x's rank
+								Again, this is done conveniently with the subtree size element
+			Maintaining subtree sizes
+				Inserting a new node 
+					in a Red-Black tree, its normally O(lg n), to traverse the tree to a proper spot for a new node
+					as each node is visited, its size can be incremented, which is an O(1) operation
+					So O(lg n) more operations will be performed, which doesn't alter the complexity of Insert
+				Rotating nodes to maintain balance
+					To maintain the size during a rotation, y simply gets x's size
+					X's size can easily be computed by summing its post rotation children (x.size = x.left.size + x.right.size + 1)
+					Both of these operations are O(1), which is the same as a rotation, so the complexity hasn't changed for rotations
+				Deleting a node
+					Deletion also requires an O(lg n) traversal up the tree to do the necessary rotations
+					The size elements can be decremented during this traversal, which makes it O(lg n)
+					So updating the size doesn't alter the complexity of deletion, either
+				
+		Red-Black trees seem to have some guarantee that their height is O(lg n)
+			Apparently by doing rotations after insert and delete
+				
+	Chapter 14.2: How to augment a a data structure
+		When augmenting a data structure, you need to consider
+			What existing data structure is most closely suited for the task at hand?
+			What additional information needs to be added to an existing data structure to serve the new purposes?
+			Can that additional information be maintained using the basic modification operations of the existing data structure? With the same efficiency?
+			What efficient operations can be performed using the new information? Does it solve the original problem?
+		Chapter 14.1 used all of these steps to augment a red-black tree
+			One of the big considerations was maintaining complexity of insert and delete
+			Storing the size of the subtree allowed OS-Select and OS-Rank to be implmented in O(lg n)
+			We could have stored the rank in each node as the additional information, and OS-Select and OS-Rank would run faster
+			But, maintaining rank would increase the complexity of insert and delete, defeating the purpose of fast OS-Select and OS-Rank
+				Unless maybe the data structure was persistent over long periods of time, and only had to be modified rarely
+			A good rule of thumb seems to be: if basic operations run in T(n), new operations should be T(n) too
+		Augmenting red-black trees
+			Maintaining the complexity of existing operations is important, and red-black trees have a theorem for it
+			Theorem: If adding attribute f to a red-black tree of n nodes and the value of f for any node x can be
+				determined from x, x.left, x.right, x.left.f and x.right.f, then we can maintain the value of f for all
+				nodes of T during insertion and deletion without affecting O(lg n) complexity of these operations
+			Proof: Changing f for x should only affect f for the ancestors of x. Changing x.f may also change x.p.f and
+				x.p.p.f and so on. The process should always terminate once T.root.f is updated.
+			Basically, when adding f to nodes of T and updating T with insertion or deletion, updating f should require
+				accessing no more than the nodes accessed by insertion and deletion
+			If you're looking at x for insertion or deletion, all of the following can happen in O(1) time
+				x.f = u
+				x.left.f = u
+				x.right.f = u
+				x.p = u
+				So updating them as part of insertion or deletion is O(lg n) complexity
+		If you can't add the attribute you want to a data structure because updating it will add complexity to basic operations,
+			look for a different attribute that can be used to derive the attribute you want, using an operation with complexity
+			similar to basic operations
+	Chapter 14.3: Interval Trees
+		Intervals are a set of ordered real numbers
+		Interval as object: i.high, i.low, easy to calculate everything in between
+		Intervals i and j overlap if i.low <= j.high and j.low <= i.high, or both lows are less than both highs
+		Interval trichotomy: i and j overlap OR i is to the left of j OR i is to the right of j
+		Interval tree: a red-black tree, but each node has an interval (x.int or x.interval)
+			Operations
+				Interval-Insert(T, x) Adds x to the tree. x.int has an interval
+				Interval-Delete(T, x) Deletes x from the tree. x.int has an interval
+				Interval-Search(T, i) returns element whose interval overlaps with i, or T.nil if not one
+		Interval Tree Design
+			The key of each node is the low point of its interval, e.g. x.key == x.int.low
+				inorder tree walk lists intervals sorted by low point
+			Each node also has a 'max' attribute, which is the the max value of an interval in the node's subtree
+			x.max can be determined by x's interval and the max values of its children
+				x.max = max(x.int.high, x.left.max, x.right.max)
+			Interval-Search is the only non-trivial operation left to design
+		Interval-Search
+			Starts at the root of the tree
+			Loops each level of the tree until it finds an overlapping child or the current element is nil
+				At each loop, if the current element has a left child and its left child's subtree max is greater than the low of the given interval
+					then the current element is set to its left chld
+					otherwise its set to its right child
+			Proof: pg 352-353
+				second paragraph of 353 is a doozy
+			Pat's thought process on the loop invariant
+				If the current node's interval and the given interval do not overlap, then the lowpoint of the current node's interval is higher than the high point of the given interval OR the highpoint of the current node's interval is less than the lowpoint of the given interval
+				Every node in the current node's left subtree has a smaller lowpoint than the current node
+				So if any node in the current node's left subtree has a higher high point than the given interval's low point, then at least one node's interval
+					in the subtree intersects with the given interval
+				So we go to the left for one of two reasons:
+					The current node's lowpoint is to high for the given interval's high point, and we need to find an interval with a lower low point, all of which would be in the left subtree
+					The current node's highpoint is to low for the given interval's low point, but we know there's a node in the left subtree that has a lower low point than the current node (because of how the tree is constructed) and a higher high point than the given interval's low point, because the left child's max is greater than the given interval's low point
+				So we only go right if the current node's highpoint is too low for the given interval's lowpoint AND there's no maximum value in the left subtree that could overtake the given interval's lowpoint
+				If we prove that the given interval's high point is less than the low point of every node in the current node's left subtree, then the given
+					interval's high point is also less than every low point in the current node's right subtree		
+Reading 7: Counting sort, radix sort, lower bounds for sorting and searching
+	Chapter 8.1: Lower bounds for sorting
+		All sorting algos seen so far have been comparison sorts
+		Comparison sorts must use comparison operations like <, <=, ==, >=, >=
+		These operations can be reduced to the binary <= and > for purposes of binary comparisons while sorting
+		For such binary comparisons, comparison sorts can be viewed as decision trees
+		A decision tree creates every permutation for the outcome of a sort in a leaf
+		So to find the correct permutation, a comparison algorithm may have to traverse a path to every leaf
+		Since each comparison operation is Θ(1), and each path to a leave requires lg n operations, and there are n leaves, comparisons take Θ(n lg n) operations
+		So the lower bounds of the worst case input for a sort is n lg n
+		Heapsort and merge sort are asymptotically optimal, because the upper bound on their worst case is also n lg n
+	Chapter 8.2: Counting sort
+		Counting sort assumes we know the largest possible integer in the input array
+		Counting-Sort(A, B, k)
+			Where A is the input array, B is the sorted array, and k is the largest possible integer in A
+			Create an array C of length k, filled with 0s
+			Loop over A, and increment the position in C that A[i] represents (C[A[i]]++)
+			After the loop, C will have a count for each value in A
+				e.g. C[6] = 2, means there are two sixes in A, C[8] = 0 means A has no eights, and C[1] = 5 means A has five ones
+			Then loop from 1 to k, and add the previous elements value to the current element (C[i] = C[i] + C[i - 1])
+				This means the new value of C[i] will be added to C[i] in the next iteration, meaning C[C.length] == A.length
+			After the loop, the value in each item of C will represent he number of items in A smaller than or equal to the item's index
+				e.g. C[0] = 2 means there are two items in A less than or equal to 0
+					 C[5] = 8 means there are eight items in A less than or equal to 5
+					 C[2] = 4 means there are four items in A less than or equal to 2
+			Finally, loop over A backwards...
+				getting jth element of A (A[j]), finding how man times it occurs in C (C[A[j]]), and putting it in that spot in B (B[C[A[j]]] = A[j])
+					A's 8th element is 3
+						C says 7 items in A are less than or equal to 3, 
+						so the first 3 in B belongs at the seventh spot
+						finally, decrement C[3] to show that a three has been placed
+					A's 7th element is 0
+						C says 2 items in A are less than or equal to 0,
+						so the first 0 in B belongs at the second spot
+						decrement C[0] to show that a zero has been placed
+					A's 6th element is 3
+						C says 6 items in A are less than or equal to 3,
+						so the second 3 in B belongs at the sixth spot
+						decrement C[3] to show that a three has been placed
+				Book's loop:
+					for j = A.length downto i
+						B[C[A[j]]] = A[j]
+						C[A[j]] = C[A[j]] - 1
+				Pat's rewrite:
+					for j = A.length downto i
+						value = A[j]
+						items_less_than_value = C[value]
+						B[items_less_than_value] = value
+						C[value]--
+				Indices of C, like 4 or 1, that don't have a corresponding value in A will never be decremented
+				Final value of C: [0, 2, 2, 4, 7, 7]
+			Complexity: Counting sort makes the most sense when k = O(n), which makes it run at Θ(n)
+				If k is much greater than n, another sort might be better
+				Counting sort literally counts how many instances of each value there is
+				It does no comparisons, so is not bound by the lower bound of a comparison sort Omega(n lg n)
+			Counting sort is stable - identical elements remain in the same order after they're sorted
+				This is important when sorted elements may be sorted on multiple dimensions
+				Look for stable sorts when allowing users to sort tables on multiple dimensions
+	Chapter 8.3: Radix Sort
+		Radix sort can sort objects with d fields or numbers with d digits
+		By sorting the array d times, starting with the least significant digit, numbers will be sorted
+		Objects, as well, will be sorted on all of their fields, starting with the least significant field
+		Radix sort requires an intermediate, stable sorting algorithm
+		Radix-Sort(A, d)
+			for i = 1 to d
+				use a stable sort to sort A on digit i
+		Counting sort is an obvious choice, so long as the highest possible digit (k) isn't too high
+		Radix sort runs in linear time when k = O(n), its complexity is Θ(d(n+k))
+Reading 8: Hasing and chaining
+	Chapter 11.1: Direct-address tables
+		Direct address tables are arrays with elements whose key is their position in the array
+			A[5] = 5
+			A[2] = {'key': 2, 'name': 'pablo'}
+			A[17] = seventeen
+		Search(T, k)
+			return T(k)
+		Insert(T, x)
+			T[x.key] = x
+		Delete(t, x)
+			T[x.key] = nil
+		Pat: It seems like there are a ton of practical occasions when array indicies can represent attributes of array elements0
+			This is a technique I've definitely under-used
+		Exercises:
+			1. Start at T[m] and check for nil, work backwards till find a non-nil. Worst case is O(m), when the entire set is empty
+			2. Keys: [0, 1, 1, 0, 1, 0, 0, 0, 1]
+				Pos:  0  1  2  3  4  5  6  7  8
+				The elements can have a key and a binary value. The bit vector is able to represent the key of the distinct element in
+				its position, and the binary value of the distinct element for value of A[key]
+	Chapter 11.2: Hash Tables
+		Direct Address tables use lots of space when the set of possible key values is large
+		Direct Address tables may also waste lots of space when the set of actual values is small compared to the set of possible values
+			That is, some direct address tables may be giant, and have many many nil values
+		Use hash functions to compute the position in an array when given a key
+			Direct addressing: key k is store in slot k
+			Hash tables: element is stored in slot hash_function(k)
+		This allows the space used by the array to remain small in the face of a large number of possible keys
+		Sometimes hash functions return the same slot value for different keys, this is called a collision
+		Avoiding collisions
+			Write a hash function that returns distinct values for all possible keys
+			But to keep the size of the underlying collection smaller than the set of all possible keys, avoiding collisions is impossible
+			Even the best, seemingly most random hash function that remains deterministic will cause collisions
+				Pat: It seems like this is why python dictionaries can't guarantee order
+			The most common collision handling technique is called chaining
+		Chaining
+			Place all elements that have to the same slot in a linked list
+			Insert, Search, and Delete will be able to retrieve the list in O(1)
+				Then the same operation will need to be performed on the list
+				Those operations will depend on the size of the list and how its linked
+		Analysis of hashing with chaining
+			Worst case, for a bad hash function that maps everything to one slot is Θ(n)
+			So don't write bad hash functions
+			If the hash function does a good job distributing the set of possible keys among
+				the m number of slots, the worst case is easy to avoid
+			Average-case time depends on load factor, the average number of elements stored in a chain
+			A hash table with a good hash function will have a small load factor, that is, its linked lists will be small
+			Finding the right list means running the hash function, which is Θ(1)
+			Getting the right element out of the list is Θ(n), where n is the size of the list
+			On average, the size of the list will be m (slots in the hast table) divided by n (aggregate size of all lists)
+			So in the average case, searching a hash table takes Θ(1 + n/m)
+			And since the upper bound on n is O(m), we can determine that n/m = O(m)/m = O(1)
+			So, on average, searching a chained hash table takes constant time as its upper bound
+		Pat: Having used dictionaries so extensively, this chapter seems largely theoretical
+	Chapter 11.3: Hash Functions
+		Well designed hash functions carefully consider the possible data they might receive
+		Consideration should also be paid to how big you want the underlying array to be
+		The size of m and the design of h(k) will determine how efficient operations are performed
+		Interpreting keys as natural numbers
+			Hash function converts a key to a natural number
+			Example: Radix notation on string 'pt' becomes 14452
+			11.3.1: The division method
+				h(k) = k mod m
+				i.e. take the remainder of the division of key and the total number of slots
+				Fast because only requires a single division operation
+				Pitfalls:
+					When m is a power of 2
+						Modulo can create a lot of collisions here when values of k have the same lower order bits
+						Example: m = 8,  65 mod 8 = 1, 129 mod 8 = 1, 256 mode 8 = 1
+				Prime numbers make good m's
+					If we wanted to store 2000 strings, we could allocate a hash table of 701 slots
+					2000/3 ~= 701, so we can expect that, on average, chained linked lists length will be 3
+					At the same time, 701 is far from powers of 2, 512 and 1024 are fairly far off
+					So, for any k, h(k) = k mod 701 is likely to provide an even distribution across slots, with shallow lists
+			11.3.2: The multiplication method
+				h(k) = floor(m(k*A - floor(k*A)))
+				Unlike division, works well when m is a power of 2
+				The key to designing it is picking a good A for the given data set
+				Knuth suggests picking an A that is close to (sqrt(5) - 1)/2
+			11.3.3: Universal Hashing
+				A user deconstructing a hash function could slow down a system by picking the right keys
+					All the keys map to the same slot
+					All operations on the resultant hash table would be Θ(n)
+				To avoid this, choose the hash function randomly, so it works independently of the keys being stored
+				This is called universal hashing, and it is very hard to deconstruct
+				First, choose a function at random from a carefully designed class of hash functions
+				Randomly chosen hash functions helps increase the probability of an average distribution of keys across slots
+				Mostly dependent on designing a universal class of hash functions
+					Universal: any two functions in the set have the same probability of returning the same slot for different keys
+						as picking the same two slots when selecting from the set of all slots at random
+Lecture 8: Hashing with chaining
+	Dictionaries as Abstract Data Types (ADT)
+		Maintains a set of items, each with a key
+		Search(key), Delete(item), and Insert(item) operations
+		Search returns item associated with key, or reports if key doesn't exist
+		Dictionary search cannot do approximations, like a binary search can
+		Insert will overwrite items with the same key
+		Comparison sorts are no faster than Θ(n lg n), search is Θ(lg n)
+		Sorts on a given range of integers can be Θ(n)
+		AVL trees search in Θ(lg n)
+		Dictionaries search in Θ(1)
+		Python - dict
+			d[key] - search
+			d[key] = val - insert
+			del d[key] - delete
+		Hashing Uses
+			Many databases use hashing
+			Compilers use hash tables for translating variables to memory addresses, or tracking reserved words
+			Network routers use dictionaries to lookup IP addresses
+			Comparing two directories, sync'ing them
+			Substring search, string commonalities
+			Cryptography
+		Direct Access Table
+			Storing items by their corresponding keys in an array
+				A[item.key] = item
+			Downfalls
+				Keys may not be non neg integers
+				Wastes space filling up unused array positions with null
+		Improving DA Table
+			1. Prehashing - mapping keys to non neg integers
+				Easy in theory, any value can be a string of bits
+				Python has the built-in hash (which is a prehash), which returns an int when given an object
+				Even good prehash functions will sometimes collide, e.g. hash('\0B') == hash('\0\0C')
+				Ideally, this will never happen
+				__hash__ overrides hash function in python objects
+					otherwise, hash returns physical memory address
+					really needs to be persistent so data stores can be searched persistently
+						otherwise, the data store will need to be re-organized
+			2. Hashing - take the universe U of all possible keys and reduce to reasonable size m
+				Etymology: like with food, cut into pieces and fold over
+				m = O(n), so not many empty spaces
+				Collisions: h(k1) = h(k2), but k1 != k2
+					Different than overwriting on insert
+						key is the same, but the item is different
+					In a collision, both the key and the item are different,
+						and they want to be stored in the same place because the hash
+						function returned the same value for both keys
+				Chaining
+					Solution to collisions
+					Store items whose keys resolve to the same slot in a linked list
+				Worst case for operations on hash tables with chaining is the same as a linked list
+				In the worst case scenario, the hash function returns the same slot for all possible keys
+				The worst case can be avoided with randomization, so the worst case becomes nearly impossible
+				After steps are taken to make the worst case unlikely, the average case becomes more relevant
+				Simple Uniform Hashing
+					Probably untrue, but useful for considering effectiveness of hashing
+					For any given k, a hash function is as likely to store the item in a given slot in the table
+						as any other slot in the table, independent of the other available k's
+					Allows us to prove that hash table operations perform in constant time
+				Analysis
+					Load factor = n / m
+						Examples: 1 means there's a slot for every item, exactly
+								10 means there's a slot for every ten items
+								1/5 means there's five slots for every item (so lots of empty slots)
+					Hash table operations are Θ(1) in the average case when m = Θ(n)
+						that is, constant when m is is defined by some constant operation on n
+						So load factors of 6, 1/15, 1, 10, 180 would all be Θ(n)
+				Writing hash functions
+					Simpler ones are bad, last one is good
+					Division method
+						h(k) = k mod m
+						Best if m is a prime, worst if m is a power of 2
+						m should also be distance from powers of 2 and 10, because keys will often be powers of 2 or 10
+					Multiplication method
+						h(k) = [(a*k) mod 2^w] >> (w-r)
+							w is the size of a word in the machine
+							k will be w bits long
+							m = 2^r
+							a is a constant w bit integer
+							a * k = w bit integer * w bit word = scrambled bits of 2 words length = w1-w2
+							w1-w2 mod 2^w = w2
+							w2 >> (w-r) = the first r bits of w2, which will be between 0 and m-1
+						Basically, by multiplying k by some randomly chosen number, you're mixing the
+							bits of k with the bits of a. Since the middle of that bit mixture will be
+							the most garbled, we take only the second half of the mixture (mod 2^w). Then
+							we take the first r bits out of that second half, which is guaranteed to be
+							a number between 0 and m-1. So it seems random, but remains deterministic because
+							'a' is a constant
+					Universal Hashing is the best, squeezed in at the end around 48:00
+			~40:40 for a mini existential crisis about a star wars reference
+			Prehashing is about turning a non-integer object into an integer
+			Hashing is about mapping an integer key to a slot in a data structure whose size is smaller than U
+			So you prehash a non-integer object so it can be fed into a hash function
+			Storing integers in a hash table may not require prehashing
+			Storing strings in a hash table does require prehashing
+Reading 19: Dynamic Programming, Memoization, subproblems
+	Dynamic programming is about breaking a problem down into subproblems, and then
+	solving those subproblems by combining their subsubproblems. Usually, subsubproblems
+	will occur multiple times through the course of the whole problem, so dynamic programming
+	arrives at an optimal solution by storing the computations of subsubproblems.
+	Chapter 15.1: Rod Cutting
+		Problem: Given a rod of length n inches and a table of prices where pi is the price of a rod of i inches, determine the maximum
+		revenue rn obtainable by cutting up the rod and selling the pieces.
+		Cut-Rod(p,n)
+			takes a list of prices and the length of the rod (n inches) to be cut
+			returns the maximum revenue that can be earned from the rod
+			returns 0 if n is 0
+			computes the revenue by finding the maximum revenue for every possible cut
+			loops through the number of inches in the rod (for i = 1 to n)
+				each time through the loop, finds the price of i (p[i])
+				adds that to the maximum value of a rod i inches smaller then n (p[i] + Cut-Rod(p,n-i))
+				compares that to the last time through the loop (max(p[i-1] + Cut-Rod(p,n-i-1), p[i] + Cut-Rod(p, n-i)))
+				keeps the larger in q to compare against the next loop (q = max(q, p[i] + Cut-Rod(p, n-i)))
+				At each loop, it's getting the revenue of a rod of length i, and then calculating the maximum revenue of the remaining rod after the i cut
+			The recursive nature of Cut-Rod divides the revenue optimization problem into smaller problems
+		Cut-Rod is slow. Running time is 2^n, exponential growth
+		Add Dynamic Programming to Cut-Rod
+			Top-Down with memoization
+				Stores the result of recursive procedures
+				Before recursing, checks storage to see if the problem was already solved
+				Memoized-Cut-Rod(p, n)
+					Uses an array to store the maxium values of n-length rods, looking them up to avoid recursions
+			Bottom-Up Method
+				Solve problem starting with the smallest version of the problem
+				As the problem gets larger, the solution to its sub problem has already been solved
+				Bottom-Up-Cut-Rod(p, n)
+					Solves by computing all the rod prices, starting with the smallest, to add up to the size of the given rod
+			Both methods are O(n^2)
+	Chapter 15.3: Elements of dynamic programming
+		Problems that dynamic programming can solve require optimal substructure and overlapping subproblems
+		Optimal Substructure
+			Exhibited when an optimal solution to the problem contains within it optimal solutions to subproblems
+			Common Pattern:
+				1. Make a choice that leaves one or more subproblems to be solved
+				2. Suppose you are given the choice that leads to the optimal solution
+				3. The choice enables you to determine ensuing subproblems and understand the entire space of subproblems
+					e.g. Finding the optimal revenue for a rod of length n by finding value of rods 1,2,3,4 .. n
+				4. The solutions to the subproblems must themselves be optimal, by cutting out nonoptimal solutions
+					and replacing them with the optimal ones that follow by contradicting the nonoptimal suppositions that
+					led to the nonoptimal solution
+Lecture 19: Dynamic Programming I, Fibonacci, Shortest Paths
+	Finding optimal solutions to optimization problems, finding the most dynamic program for problem, like designing a train schedule program
+	General, powerful algo design technique
+	Good for solving optimization problems, most of something, shortest of something, least of something
+	Allows exhaustive searches in n^2 time, "careful brute force"
+	Basic idea: Take a problem, split it into sub problems, and reuse the solutions to the subproblems to solve the larger problem
+	Example: Fibonacci
+		Naive solution:
+			fib(n):
+				if n <= 2: f = 1
+				else: f = fib(n-1) + fib(n-2)
+				return f
+			Complexity: O(c^n)
+		Memoized DP solution:
+			memo = {}
+			fib(n):
+				if n in memo: return memo[n]
+				if n <= 2: f = 1
+				else: f = fib(n-1) + fib(n-2)
+				return f
+			Tree:
+							f(n)
+						   /    \
+					  f(n-1)     f(n-2)<---
+                     /     \
+               --->f(n-2) f(n-3)
+			So the right side of the tree never needs computed
+			So f(1), f(2), f(3)... f(n), each are only called once
+			So running time is linear: O(n)
+
+	Designing a Dynamic Algorithm
+		Dynamic programming is recursion + memoization + guessing
+		Recursion + Memoization
+			Store the solutions to subproblems that can be combined to solve the actual problem.
+			What are the subproblems? Often, recursive calls
+			Running time = # of subproblems * time per subproblem
+		Bottom Up Approach
+			fib = {}
+			for i in range(1,n+1):
+				if i <= 2: f = 1
+				else: f = fib[i-1] + fib[i-2]
+				fib[i] = f
+			return fib[n]
+			Bottom-up does same computation as memoized
+			Topological sort of subproblem dependency DAG (directed acyclical graph?)
+				fn depends on fn-1 depends on fn-2 depends on fn-3
+				So start a f(1) and increment to f(n)
+			Running time is easier to figure w/o memoization
+			Needs (a little) less space then memoization
+	Shortest Paths
+		Shortest-Path(s,v) for all v
+		Design
+			Guess: algorithmically try all guesses for the answer
+			Graph
+				s is the starting point
+				edges to other nodes
+				v is the finishing point
+			Guess by checking every edge connected to s, get to v
+				This will be less efficient because we're looking for multiple v
+				Start at the multiple (v) and come back to the singular (s)
+				That way, when you do memoization or bottom up, you'll be storing
+					more relevant info
+			Guess by checking every edge connected to v, get to s
+				The node at the end of the edge is u
+				Now we need to find the shortest path from u to s, S(s,u)
+				Guess by checking every edge connected to u
+					The node at the end of the edge is t
+					Now we need to find the shortest path from t to s, S(s,t)
+					Guess by checking every edge connected to t
+					You can see how the subproblems are apparent
+					At this point, it should be obvious that the base case is finding that x is connected to s for S(s,x)
+						Or if x has no knowledge of what its connected to, base case is s,s: S(s,s) = 0 or []
+			Optimal substructure: sub-paths of shortests paths are shortest paths
+			Subproblem dependencies should be acyclical, or we get an infinite algorithm
+				f(n) depends on f(n-1) depends on f(n) depends on f(n-1) and so on...
+			How do we turn cyclical subproblems into acyclical subproblems?
+				Another base case? Premature memoization? If I am the same problem as an ancestor problem, I am not part of the solution
+				Limit recursion depth! Once you get to a certain depth, you know you would have checked all the paths already
+Reading 23: Computational Complexity
+	Chapter 34: NP Completeness
+		Problems that are solved in polynomial time (O(n^k)) are tractable or easy
+		Problems that can't be solved in polynomial time are intractable or hard
+		The problems that do not yet have polynomial time solving problems are called NP-complete problems
+			They are thought to have no polynomial-time algorithms to solve them
+		Classes of problems
+			P: solvable in polynomial time
+			NP: verifiable in polynomial time, that is, given a solution, it can be verified in polynomial time
+			P is a subset of NP
+			NPC: NP-complete, the mountain top of the NP class, as hard as any problem in NP
+				If any NPC problem can be solved in polynomial time, than every NP problem has a polynomial time algorithm
+		Three Concepts of Showing NP-Completeness
+			1. Decision problems
+				Problems with a yes or no answer
+				Optimization problems, like Shortest-Path, can be bounded to become decision problems
+					e.g. Does a path exist from u to v consisting of at most k edges?
+				Showing that an optimization problem is hard means its decision problem is also hard
+			2. Reductions
+				Given a problem A and an instance of that problem a, show that a problem B and its instance b can be transformed into A and a...
+					In polynomial time
+					The answers are the same, that is, the answer for a is yes iff(sic) the answer for b is yes
+				The transformation is called a reduction algorithm
+				Once the trasnformation is done, the answer to b is the answer to a
+				So if B is an easy problem, so is A, and reduction is the proof
+				Works both ways: if we know A is NP-Complete, we can prove B is NP-Complete
+			3. A First NP-Complete Problem
+				Since we need other problems to show a problem is NP-Complete, we rely on a more complete proof for proving NP-Completeness of an original problem.
+		34.1: Polynomial Time
+			Formalizing Polynomial Time Problems
+				1. Once we can prove a problem can be solved in O(n^100), it's generally understood that more efficient algorithms
+					for practical cases will get reduce the time complexity. So even though O(n^100) seems hard, it will eventually
+					be easy.
+				2. Once we prove a problem can be solved in polynomial-time for one model of computing, we solve it in poly-time
+					in any other model.
+				3. Polynomials have mathematical closure properites like addition, multiplication, and composition. So combining
+					solutions to poly-time solvable problems is a poly-time composite algorithm
+			Abstract Problems
+				Problems are defined as a binary relationship between a set of instances or inputs (I) and a set outputs or solutions (S)
+				Abstract decision problems may have a large I, but a clear S: {0,1}, {yes, no}
+			Encodings
+				If a solution to a problem can be encoded as a set of binary strings that a computer can understand, then it is a concrete problem
+					Basically, we need to know a solution can be programmed into a computer
+					Many problems with solutions, like convincing your aunt to visit for thanksgiving, cannot be encoded this way (yet)
+				A concrete problem is polynomial-time solvable if there is an algorithm that can solve it in O(n^k)
+			Form definition of P: the set of concrete decision problems that are polynomial-time solvable
+				Problems with yes or no answers that can be represented in a computer and solved in poly-time
+Lecture 23: Computational Complexity
+	Classes of Problems
+		P: Problems solvable in polynomial time
+		NP: (nondeterministic polynomial) Problems solvable in polynomial time via a lucky algorithm
+			Non-deterministic model
+			Algorithm is guessing a lot to solve it, gets lucky
+			Guesses are guaranteed to find a yes, if it exists
+			Luck really means that you picked the right one randomly
+			An algorithm has the resources to try everything, so it gets lucky by finding a yes in a big pile of no's
+		EXP: Problems solvable in exponential time (2^n^c)
+		R: Problems solvable in finite time
+	Negative Weight Cycle Detection
+		Given a weighted, directed graph, find if it has any negative weight cycles
+		P class problem
+	NxN Chess
+		Given an nxn chess board with pieces in various positions, who wins?
+		EXP class problem, known not in P class
+	Tetris
+		Given a list of pieces, can I survive?
+		EXP class problem, unknown if in P
+	Halting Problem
+		Given a computer program, does it halt?
+		Not in R, no way to solve this problem for all programs
+	Most decision problems are not in R, unsolvable
+		Programs can be reduced to binary strings which can be reduced to integers
+		Decision problem: a function that maps inputs to {yes, no} or {0,1}
+			So a decision problem is a map between all possible inputs and a string of bits
+			output: 0  1  1  0  1  1  1  0  0
+			input:  1, 2, 3, 4, 5, 6, 7, 8, 9
+		Decision problem is something in the set of all real number
+		Program is something in the set of all integers
+		Real Numbers > Integers
+		Many many more problems than programs that can solve them
+		Almost all problems are unsolvable by programs
+	Other ways to describe NP problems
+		Decision problems with solutions that can be checked in polynomial time
+			Whenever the answer to a decision problem is yes, you can prove it and
+				you can check the proof in polynomial time
+			Finding the right moves for a given set of Tetris blocks is NP
+			But checking that the right moves are applied to that set of blocks is P
+	P != NP: a conjecture, but probably true
+		No one can prove it either way
+		If someone ever does, they'll be a CS legend
+		Means there are problems in NP that aren't and P, but less difficult than EXP
+		Basically, NP problems always have to be brute-forced
+		"You can't engineer luck"
+		"Easier to check a solution than to make one"
+	NP - P (might be empty)
+		If anything is in this set, Tetris is one
+		Tetris is the hardest problem in NP, or as hard as the hardest
+		So if you can solve Tetris in polynomial time,
+			you can solve all of NP in polynomial time, and P = NP, and the world ends
+		This means Tetris is NP-Complete
+			Tetris is NP hard
+			Tetris is in NP
+			Solving Tetris in poly-time means P = NP
+	Reduction
+		Have unknown problem A, convert to known problem B
+		Turn a problem into a graph problem and use a graph algo
+		
+	
+
+
+Other thoughts:
+	Weaker bound means less accurate, f(n) = Θ(n^2), and also f(n) = Θ(c^n), but Θ(c^n) is weaker
+	Analyzing the algorithms allows you to prove to yourself, your boss, your customer, or your balance sheet that a problem can't be computed more efficiently
+		Got to solve a different problem or throw more hardware at it
+	Computer science is a bit softer than other sciences because we don't care about exactness, we care about order of growth
+		Computers are fast, so we don't need problems solved exactly, just pretty good	Exercises in readings were performed for understanding of material, goal was to grasp breadth of material, not necessarily depth
+	Exercises were deconstructed to trivial problems, then stopped
+		Example: 14.2.1 - Determined that x.subtree-min, x.subtree-max, x.predecessor, x.successor could be maintained, but didn't prove
+	Lots of stuff here that my experience gave me a vague understanding of, but the theory allowed me to lock onto
+		Wouldn't have known to construct a tree or heap to avoid a O(n^2) problem
+		Most often would have constructed a dictionary, which could cause space issues
+	Taking notes is like translating to my own personal layman's terms
+	Thoughts on academic integrity
+		Spend more time working on a problem no one is paying me for?
+		Make sure I understand the concepts and move on?
+		How can I know I understand the concepts without solving the problem? That's the dilemma.
+		Difficult to prove the practical uses of all the theory when applied to getting a job and doing it well
+			Looking for a library that helps bundle javascript libraries for use with a Docker driven dev environment is not
+				a problem that can be solved practically by CS theory, no class in the MIT CS department will teach me that
+			But even though the skills to solve CS theory problems and researching javascript languages are orthognal,
+				they are not exclusive. A person smart enough to solve a CS theory problem is probably smart enough to
+				find the right javascript library
+	Started to get academic fatigue at the end
+	Take Aways:
+		Way to much in the book to master in a few weeks, which is a good thing
+		I know how to use the book now
+		When I hit an algorithm I can't solve, I'll go to the book
+		When the book is too dense, I'll go to the lectures
+	Your own purposes:
+		Start with chapter 3, then read 1 and 2 and 4 and 5
+		That teaches you how to use the book
+	Even though lecture 23 was mostly theory, I'll never wonder what NP-Complete means again
